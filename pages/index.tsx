@@ -45,6 +45,7 @@ export default function Home() {
       setImage(fileList[0].originFileObj);
     }
   };
+  
   return (
     <>
       <div className="main-container">
