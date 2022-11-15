@@ -23,7 +23,7 @@ export default function Home() {
       redirect: "follow",
     };
 
-    fetch(`http://127.0.0.1:8000/uplaod`, requestOptions)
+    fetch(`https://glacial-waters-71430.herokuapp.com/uplaod`, requestOptions)
       .then((response) => response.blob())
       .then(async (blob) => {
         console.log(blob);
