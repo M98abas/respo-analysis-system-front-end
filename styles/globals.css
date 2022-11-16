@@ -10,11 +10,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   padding: 10px 5px;
 }
 .container {
-  width: 90vw;
-  height: 90vh;
+  margin-top: 20px;
+  width: 30vw;
+  height: 30vh;
   box-shadow: 5px 3px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn{
+  height: 30px;
+  margin-top: 20px;
 }

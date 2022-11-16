@@ -62,7 +62,17 @@ export default function Home() {
             </p>
           </Dragger>
         </div>
-        <button onClick={sendData}>Upload</button>
+        <button className="btn" onClick={sendData}>Upload</button>
+      </div>
+      <div className="chart-section">
+        <div className="container">
+          <div className="right-sec">
+
+          </div>
+          <div className="left-sec">
+            
+          </div>
+        </div>
       </div>
     </>
   );
