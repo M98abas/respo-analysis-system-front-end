@@ -1,66 +1,126 @@
 import { Line } from "@ant-design/charts";
 import { InboxOutlined } from "@ant-design/icons";
-import { Upload, Table, message } from "antd";
+import { Upload, message } from "antd";
 import moment from "moment";
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 const { Dragger } = Upload;
 
 export default function Home() {
   const [dataSource, setDataSource]: any = useState([]);
-  const [data, setData]: any = useState([]);
   const [firstBin, setFirstBin]: any = useState("");
   const [secondBin, setSecondBin]: any = useState("");
   const [image, setImage]: any = useState();
   const bins: any = [firstBin, secondBin];
-  const dateTime = moment(new Date()).format("YYYY/MM/DD");
+  // const dateTime = moment(new Date()).format("YYYY/MM/DD");
   let state: any = {
     loading: false, // to keep track of when form submitted
     errors: null, // for displaying errors
     file: "", // the file type the user chooses to download
   };
-  let config: any;
+  // let config: any;
+  function createData(
+    response_code: string,
+    response_description: string,
+    count: number,
+    children: Array<Object>
+  ) {
+    return {
+      response_code,
+      response_description,
+      count,
+      children,
+    };
+  }
 
-  const columns = [
-    {
-      title: "Bin",
-      dataIndex: "Bin",
-      key: "Bin",
-    },
-    {
-      title: "response_code",
-      dataIndex: "response_code",
-      key: "response_code",
-    },
+  function Row(props: { row: ReturnType<typeof createData> }) {
+    const { row } = props;
+    const [open, setOpen] = React.useState(false);
 
-    {
-      title: "response_description",
-      dataIndex: "response_description",
-      key: "response_description",
-    },
-    {
-      title: "Count",
-      dataIndex: "count",
-      key: "Count",
-    },
-    {
-      title: "children",
-      dataIndex: "children",
-      children: (data: any) => [
-        {
-          title: "Bin",
+    return (
+      <React.Fragment>
+        <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+          <TableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+          <TableCell component="th" scope="row">
+            {row.response_code}
+          </TableCell>
+          <TableCell align="right">{row.response_description}</TableCell>
+          <TableCell align="right">{row.count}</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box sx={{ margin: 1 }}>
+                <Typography variant="h6" gutterBottom component="div">
+                  Table of Bins
+                </Typography>
+                <Table size="small" aria-label="purchases">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Short Id</TableCell>
+                      <TableCell>Unique Id</TableCell>
+                      <TableCell>Bins</TableCell>
+                      <TableCell>Account Holder</TableCell>
+                      <TableCell>Amount</TableCell>
+                      <TableCell align="right">Date</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {row.children.map((historyRow: any) => {
+                      console.log(historyRow);
 
-          dataIndex: "children.Bin",
-        },
-      ],
-      // key:"children",
-    },
-  ];
-  //   useEffect(()=>{
-  // sendData
-  //   },[data])
+                      return (
+                        <TableRow key={historyRow.UniqueId}>
+                          <TableCell>{historyRow.ShortId}</TableCell>
+                          <TableCell>{historyRow.UniqueId}</TableCell>
+                          <TableCell component="th" scope="row">
+                            {historyRow.Bin}
+                          </TableCell>
+                          <TableCell>{historyRow.AccountHolder}</TableCell>
+                          <TableCell>
+                            {historyRow.Credit} {historyRow.Currency}
+                          </TableCell>
+                          <TableCell align="center">
+                            {historyRow.RequestTimestamp}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </React.Fragment>
+    );
+  }
+
+  const [rows, setRows] = useState([]);
+
   function sendData() {
-    if (image) {
+    if (image && dataSource.length == 0) {
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
 
@@ -76,10 +136,12 @@ export default function Home() {
         .then((response) => response.json())
         .then(async (blob) => {
           setDataSource(blob);
+          setRows(blob);
         })
         .catch((e) => console.log(e));
     } else {
-      return message.error("Image is not set");
+      setDataSource([]);
+      return message.error("File is not set");
     }
   }
 
@@ -112,17 +174,16 @@ export default function Home() {
     }
   };
 
-  config = {
-    data,
-    height: 400,
-    xField: "Code",
-    yField: "Date",
-    point: {
-      size: 5,
-      shape: "diamond",
-    },
-  };
-
+  // config = {
+  //   data,
+  //   height: 400,
+  //   xField: "Code",
+  //   yField: "Date",
+  //   point: {
+  //     size: 5,
+  //     shape: "diamond",
+  //   },
+  // };
   return (
     <>
       <div className="main-container">
@@ -148,20 +209,26 @@ export default function Home() {
             Get analize
           </button> */}
         </div>
-        {/* <div className="flexed-items input-items">
-          <div className="items">
-            <p>First Bin</p>
-            <input type="text" onChange={(e) => setFirstBin(e.target.value)} />
-          </div>
-          <div className="items">
-            <p>Second Bin</p>
-            <input type="text" onChange={(e) => setSecondBin(e.target.value)} />
-          </div>
-        </div> */}
       </div>
       <div className="table">
         <div className="table-container">
-          <Table dataSource={dataSource} columns={columns} bordered />
+          <TableContainer component={Paper}>
+            <Table aria-label="collapsible table">
+              <TableHead>
+                <TableRow>
+                  <TableCell />
+                  <TableCell>Code</TableCell>
+                  <TableCell align="right">Resonse</TableCell>
+                  <TableCell align="right">Count</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row: any) => (
+                  <Row key={row.key} row={row} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
       </div>
     </>
