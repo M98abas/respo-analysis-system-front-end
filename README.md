@@ -16,3 +16,9 @@ Do below :
 2. To run project in dev env, run:
 
 `npm run dev`
+
+
+
+
+`ShortId	UniqueId	PaymentType	PaymentMethod	RequestTimestamp	ChannelName	AccountNumberLast4	ReturnCode	AccountHolder	Brand	Debit	Credit	Currency	Bin	ConnectorDetails
+`
