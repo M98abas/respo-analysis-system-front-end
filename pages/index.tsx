@@ -17,14 +17,12 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { Grid } from "@mui/material";
 const { Dragger } = Upload;
 
 export default function Home() {
   const [dataSource, setDataSource]: any = useState([]);
-  const [firstBin, setFirstBin]: any = useState("");
-  const [secondBin, setSecondBin]: any = useState("");
   const [image, setImage]: any = useState();
-  const bins: any = [firstBin, secondBin];
   // const dateTime = moment(new Date()).format("YYYY/MM/DD");
   let state: any = {
     loading: false, // to keep track of when form submitted
@@ -78,31 +76,54 @@ export default function Home() {
                 <Table size="small" aria-label="purchases">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Short Id</TableCell>
                       <TableCell>Unique Id</TableCell>
                       <TableCell>Bins</TableCell>
+                      <TableCell>Last 4 Digit</TableCell>
                       <TableCell>Account Holder</TableCell>
                       <TableCell>Amount</TableCell>
-                      <TableCell align="right">Date</TableCell>
+                      <TableCell align="left">Date</TableCell>
+                      <TableCell>Connectoer</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {row.children.map((historyRow: any) => {
-                      console.log(historyRow);
+                      let connectorResult = JSON.parse(
+                        historyRow.ConnectorDetails
+                      );
 
                       return (
                         <TableRow key={historyRow.UniqueId}>
-                          <TableCell>{historyRow.ShortId}</TableCell>
                           <TableCell>{historyRow.UniqueId}</TableCell>
                           <TableCell component="th" scope="row">
                             {historyRow.Bin}
                           </TableCell>
+                          <TableCell>{historyRow.AccountNumberLast4}</TableCell>
+
                           <TableCell>{historyRow.AccountHolder}</TableCell>
                           <TableCell>
                             {historyRow.Credit} {historyRow.Currency}
                           </TableCell>
                           <TableCell align="center">
                             {historyRow.RequestTimestamp}
+                          </TableCell>
+                          <TableCell align="left">
+                            {Object.keys(connectorResult).length !== 0 ? (
+                              <Grid
+                                container
+                                direction="column"
+                                justifyContent="center"
+                                alignItems="flex-start"
+                                textAlign="left"
+                              >
+                                {Object.keys(connectorResult).map((key) => (
+                                  <p>
+                                    {key} &gt; {connectorResult[key]}
+                                  </p>
+                                ))}
+                              </Grid>
+                            ) : (
+                              <p>No Data Availabe</p>
+                            )}
                           </TableCell>
                         </TableRow>
                       );
