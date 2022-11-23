@@ -1,4 +1,8 @@
-import { Line } from "@ant-design/charts";
+// import { Line } from "@ant-design/charts";
+// FaCcVisa
+// RiMastercardLine
+import { FaCcVisa } from "react-icons/fa";
+import { RiMastercardLine } from "react-icons/ri";
 import { InboxOutlined } from "@ant-design/icons";
 import { Upload, message } from "antd";
 import moment from "moment";
@@ -21,6 +25,7 @@ import { Grid } from "@mui/material";
 const { Dragger } = Upload;
 
 export default function Home() {
+  const lookingFor = ["AuthCode", "ConnectorTxID2", "ExtendedDescription"];
   const [dataSource, setDataSource]: any = useState([]);
   const [image, setImage]: any = useState();
   // const dateTime = moment(new Date()).format("YYYY/MM/DD");
@@ -76,6 +81,7 @@ export default function Home() {
                 <Table size="small" aria-label="purchases">
                   <TableHead>
                     <TableRow>
+                      <TableCell>Brand</TableCell>
                       <TableCell>Unique Id</TableCell>
                       <TableCell>Bins</TableCell>
                       <TableCell>Last 4 Digit</TableCell>
@@ -93,6 +99,13 @@ export default function Home() {
 
                       return (
                         <TableRow key={historyRow.UniqueId}>
+                          <TableCell>
+                            {historyRow.Brand == "VISA" ? (
+                              <FaCcVisa size="40" />
+                            ) : (
+                              <RiMastercardLine size="40" />
+                            )}
+                          </TableCell>
                           <TableCell>{historyRow.UniqueId}</TableCell>
                           <TableCell component="th" scope="row">
                             {historyRow.Bin}
@@ -115,11 +128,15 @@ export default function Home() {
                                 alignItems="flex-start"
                                 textAlign="left"
                               >
-                                {Object.keys(connectorResult).map((key) => (
-                                  <p>
-                                    {key} &gt; {connectorResult[key]}
-                                  </p>
-                                ))}
+                                {Object.keys(connectorResult).map((key: any) =>
+                                  lookingFor.indexOf(key) >= 0 ? (
+                                    <p>
+                                      {key} &gt;&gt; {connectorResult[key]}
+                                    </p>
+                                  ) : (
+                                    <></>
+                                  )
+                                )}
                               </Grid>
                             ) : (
                               <p>No Data Availabe</p>
