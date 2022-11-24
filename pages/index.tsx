@@ -22,6 +22,7 @@ import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Grid } from "@mui/material";
+import Image from "next/image";
 const { Dragger } = Upload;
 
 export default function Home() {
@@ -52,6 +53,7 @@ export default function Home() {
   function Row(props: { row: ReturnType<typeof createData> }) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
+    console.log(row);
 
     return (
       <React.Fragment>
@@ -78,17 +80,18 @@ export default function Home() {
                 <Typography variant="h6" gutterBottom component="div">
                   Table of Bins
                 </Typography>
-                <Table size="small" aria-label="purchases">
+                <Table size="medium" aria-label="purchases">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Brand</TableCell>
-                      <TableCell>Unique Id</TableCell>
-                      <TableCell>Bins</TableCell>
-                      <TableCell>Last 4 Digit</TableCell>
-                      <TableCell>Account Holder</TableCell>
-                      <TableCell>Amount</TableCell>
-                      <TableCell align="left">Date</TableCell>
-                      <TableCell>Connectoer</TableCell>
+                      <TableCell align="center">Brand</TableCell>
+                      <TableCell align="center">Count</TableCell>
+                      <TableCell align="center">Unique Id</TableCell>
+                      <TableCell align="center">Bins</TableCell>
+                      <TableCell align="center">Last 4-Digit</TableCell>
+                      <TableCell align="center">Account Holder</TableCell>
+                      <TableCell align="center">Amount</TableCell>
+                      <TableCell align="center">Date</TableCell>
+                      <TableCell align="center">Connectoer</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -101,11 +104,22 @@ export default function Home() {
                         <TableRow key={historyRow.UniqueId}>
                           <TableCell>
                             {historyRow.Brand == "VISA" ? (
-                              <FaCcVisa size="40" />
+                              <Image
+                                src={"/images/visa_icon.svg"}
+                                width="60"
+                                height="50"
+                                alt="Visa Icon"
+                              />
                             ) : (
-                              <RiMastercardLine size="40" />
+                              <Image
+                                src={"/images/mastercard_icon.svg"}
+                                width="60"
+                                height="50"
+                                alt="Mastercard"
+                              />
                             )}
                           </TableCell>
+                          <TableCell>{historyRow.bin_count}</TableCell>
                           <TableCell>{historyRow.UniqueId}</TableCell>
                           <TableCell component="th" scope="row">
                             {historyRow.Bin}
@@ -197,9 +211,15 @@ export default function Home() {
     };
 
     fetch(`http://127.0.0.1:8000/analize`, requestOptions)
-      .then((response) => response.json())
-      .then(async (result: any) => {
-        setDataSource(result);
+      .then((response) => response.blob())
+      .then(async (blob: any) => {
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const link: any = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `sample.${state.file}.csv`); // 3. Append to html page
+        document.body.appendChild(link); // 4. Force download
+        link.click(); // 5. Clean up and remove the link
+        link.parentNode.removeChild(link);
       })
       .catch((e) => console.log(e));
 
@@ -243,9 +263,9 @@ export default function Home() {
           <button className="btn" onClick={sendData}>
             Get Codes
           </button>
-          {/* <button className="btn" onClick={analyizedDataUploadButton}>
+          <button className="btn" onClick={analyizedDataUploadButton}>
             Get analize
-          </button> */}
+          </button>
         </div>
       </div>
       <div className="table">
