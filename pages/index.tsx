@@ -244,7 +244,7 @@ export default function Home() {
         redirect: "follow",
       };
 
-      fetch(`http://127.0.0.1:8000/uplaod`, requestOptions)
+      fetch(`https://ccccqqw.herokuapp.com/uplaod`, requestOptions)
         .then((response) => response.json())
         .then(async (result: any) => {
           console.log(JSON.parse(result.connector));
@@ -274,7 +274,7 @@ export default function Home() {
       redirect: "follow",
     };
 
-    fetch(`http://127.0.0.1:8000/analize`, requestOptions)
+    fetch(`https://ccccqqw.herokuapp.com/analize`, requestOptions)
       .then((response) => response.blob())
       .then(async (blob: any) => {
         const url = window.URL.createObjectURL(new Blob([blob]));
