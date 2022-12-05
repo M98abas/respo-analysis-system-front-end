@@ -3,8 +3,9 @@
 // RiMastercardLine
 import { FaCcVisa } from "react-icons/fa";
 import { RiMastercardLine } from "react-icons/ri";
+import { CSVLink } from "react-csv";
 import { InboxOutlined } from "@ant-design/icons";
-import { Upload, message } from "antd";
+import { Upload, message, Button } from "antd";
 import moment from "moment";
 import { useState } from "react";
 import * as React from "react";
@@ -28,6 +29,9 @@ const { Dragger } = Upload;
 export default function Home() {
   const lookingFor = ["AuthCode", "ConnectorTxID2", "ExtendedDescription"];
   const [dataSource, setDataSource]: any = useState([]);
+  const [total, setTotal]: any = useState(0);
+  const [sumationData, setSumationData]: any = useState([]);
+  const [connectorData, setConnectorData]: any = useState([]);
   const [image, setImage]: any = useState();
   // const dateTime = moment(new Date()).format("YYYY/MM/DD");
   let state: any = {
@@ -53,7 +57,6 @@ export default function Home() {
   function Row(props: { row: ReturnType<typeof createData> }) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
-    console.log(row);
 
     return (
       <React.Fragment>
@@ -78,7 +81,18 @@ export default function Home() {
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-                  Table of Bins
+                  <Button>
+                    <CSVLink
+                      filename={"Expense_Table.csv"}
+                      data={[...row.children]}
+                      className="btn btn-primary"
+                      onClick={() => {
+                        message.success("The file is downloading");
+                      }}
+                    >
+                      Export to CSV
+                    </CSVLink>
+                  </Button>
                 </Typography>
                 <Table size="medium" aria-label="purchases">
                   <TableHead>
@@ -96,67 +110,84 @@ export default function Home() {
                   </TableHead>
                   <TableBody>
                     {row.children.map((historyRow: any) => {
-                      let connectorResult = JSON.parse(
-                        historyRow.ConnectorDetails
-                      );
+                      // console.log(historyRow.ConnectorDetails);
+
+                      let connectorResult = historyRow.ConnectorDetails;
 
                       return (
-                        <TableRow key={historyRow.UniqueId}>
-                          <TableCell>
-                            {historyRow.Brand == "VISA" ? (
-                              <Image
-                                src={"/images/visa_icon.svg"}
-                                width="60"
-                                height="50"
-                                alt="Visa Icon"
-                              />
-                            ) : (
-                              <Image
-                                src={"/images/mastercard_icon.svg"}
-                                width="60"
-                                height="50"
-                                alt="Mastercard"
-                              />
-                            )}
-                          </TableCell>
-                          <TableCell>{historyRow.bin_count}</TableCell>
-                          <TableCell>{historyRow.UniqueId}</TableCell>
-                          <TableCell component="th" scope="row">
-                            {historyRow.Bin}
-                          </TableCell>
-                          <TableCell>{historyRow.AccountNumberLast4}</TableCell>
+                        <>
+                          <TableRow key={historyRow.UniqueId}>
+                            <TableCell align="center">
+                              {historyRow.Brand == "VISA" ? (
+                                <Image
+                                  src={"/images/visa_icon.svg"}
+                                  width="60"
+                                  height="50"
+                                  alt="Visa Icon"
+                                />
+                              ) : (
+                                <Image
+                                  src={"/images/mastercard_icon.svg"}
+                                  width="60"
+                                  height="50"
+                                  alt="Mastercard"
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell align="center">
+                              {historyRow.count}
+                            </TableCell>
+                            <TableCell align="center">
+                              {historyRow.UniqueId}
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              component="th"
+                              scope="row"
+                            >
+                              {historyRow.Bin}
+                            </TableCell>
+                            <TableCell align="center">
+                              {historyRow.AccountNumberLast4}
+                            </TableCell>
 
-                          <TableCell>{historyRow.AccountHolder}</TableCell>
-                          <TableCell>
-                            {historyRow.Credit} {historyRow.Currency}
-                          </TableCell>
-                          <TableCell align="center">
-                            {historyRow.RequestTimestamp}
-                          </TableCell>
-                          <TableCell align="left">
-                            {Object.keys(connectorResult).length !== 0 ? (
-                              <Grid
-                                container
-                                direction="column"
-                                justifyContent="center"
-                                alignItems="flex-start"
-                                textAlign="left"
-                              >
-                                {Object.keys(connectorResult).map((key: any) =>
-                                  lookingFor.indexOf(key) >= 0 ? (
-                                    <p>
-                                      {key} &gt;&gt; {connectorResult[key]}
-                                    </p>
-                                  ) : (
-                                    <></>
-                                  )
-                                )}
-                              </Grid>
-                            ) : (
-                              <p>No Data Availabe</p>
-                            )}
-                          </TableCell>
-                        </TableRow>
+                            <TableCell align="center">
+                              {historyRow.AccountHolder}
+                            </TableCell>
+                            <TableCell align="center">
+                              {historyRow.Credit} {historyRow.Currency}
+                            </TableCell>
+                            <TableCell align="center">
+                              {moment(
+                                new Date(historyRow.RequestTimestamp)
+                              ).format("YYYY/MM/DD")}
+                            </TableCell>
+                            <TableCell align="left">
+                              {Object.keys(connectorResult).length !== 0 ? (
+                                <Grid
+                                  container
+                                  direction="column"
+                                  justifyContent="center"
+                                  alignItems="flex-start"
+                                  textAlign="left"
+                                >
+                                  {Object.keys(connectorResult).map(
+                                    (key: any) =>
+                                      lookingFor.indexOf(key) >= 0 ? (
+                                        <p>
+                                          {key} &gt;&gt; {connectorResult[key]}
+                                        </p>
+                                      ) : (
+                                        <></>
+                                      )
+                                  )}
+                                </Grid>
+                              ) : (
+                                <p>No Data Availabe</p>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        </>
                       );
                     })}
                   </TableBody>
@@ -164,6 +195,35 @@ export default function Home() {
               </Box>
             </Collapse>
           </TableCell>
+        </TableRow>
+      </React.Fragment>
+    );
+  }
+
+  function RowTwo(props: { row: ReturnType<typeof createData> }) {
+    const { row }: any = props;
+    return (
+      <React.Fragment>
+        <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+          <TableCell align="left">
+            {Number.isInteger(row.clearingInstituteName)
+              ? "Total"
+              : row.clearingInstituteName}
+          </TableCell>
+          <TableCell align="center">{row.sumation}</TableCell>
+        </TableRow>
+      </React.Fragment>
+    );
+  }
+  function RowConnector(props: { row: ReturnType<typeof createData> }) {
+    const { row }: any = props;
+    return (
+      <React.Fragment>
+        <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+          <TableCell align="center">{row.clearingInstituteName}</TableCell>
+          <TableCell align="center">{row.ReturnCode}</TableCell>
+          <TableCell align="left">{row.ExtendedDescription}</TableCell>
+          <TableCell align="center">{row.count}</TableCell>
         </TableRow>
       </React.Fragment>
     );
@@ -186,9 +246,13 @@ export default function Home() {
 
       fetch(`http://127.0.0.1:8000/uplaod`, requestOptions)
         .then((response) => response.json())
-        .then(async (blob) => {
-          setDataSource(blob);
-          setRows(blob);
+        .then(async (result: any) => {
+          console.log(JSON.parse(result.connector));
+
+          setSumationData(JSON.parse(result.sumation));
+          setConnectorData(JSON.parse(result.connector));
+          setDataSource(JSON.parse(result.df));
+          setRows(JSON.parse(result.df));
         })
         .catch((e) => console.log(e));
     } else {
@@ -199,7 +263,7 @@ export default function Home() {
 
   function analyizedDataUploadButton() {
     var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Content-Type", "application/blob");
 
     var formdata = new FormData();
     formdata.append("file", image, image.name);
@@ -232,16 +296,6 @@ export default function Home() {
     }
   };
 
-  // config = {
-  //   data,
-  //   height: 400,
-  //   xField: "Code",
-  //   yField: "Date",
-  //   point: {
-  //     size: 5,
-  //     shape: "diamond",
-  //   },
-  // };
   return (
     <>
       <div className="main-container">
@@ -260,15 +314,101 @@ export default function Home() {
           </Dragger>
         </div>
         <div className="flexed-items">
-          <button className="btn" onClick={sendData}>
+          <button className="btn btn-primary" onClick={sendData}>
             Get Codes
           </button>
-          <button className="btn" onClick={analyizedDataUploadButton}>
+          <button
+            className="btn btn-primary"
+            onClick={analyizedDataUploadButton}
+          >
             Get analize
+          </button>
+          <button>
+            <CSVLink
+              filename={"Expense_Table.csv"}
+              data={[...connectorData, ...sumationData]}
+              className="btn btn-primary"
+              onClick={() => {
+                message.success("The file is downloading");
+              }}
+            >
+              Export to CSV
+            </CSVLink>
           </button>
         </div>
       </div>
       <div className="table">
+        <div className="result-table">
+          <div className="table-1">
+            <Typography variant="h6" gutterBottom component="div">
+              Sumation Of all Transaction{" "}
+              <Button>
+                <CSVLink
+                  filename={"Expense_Table.csv"}
+                  data={[...sumationData]}
+                  className="btn btn-primary"
+                  onClick={() => {
+                    message.success("The file is downloading");
+                  }}
+                >
+                  Export to CSV
+                </CSVLink>
+              </Button>
+            </Typography>
+            <TableContainer component={Paper}>
+              <Table aria-label="collapsible table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="left">Description</TableCell>
+                    <TableCell align="right">Count</TableCell>
+                  </TableRow>
+                </TableHead>
+
+                <TableBody>
+                  {sumationData.map((row: any) => (
+                    <RowTwo key={row.key} row={row} />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+
+          <br />
+          <div className="table-2">
+            <Typography variant="h6" gutterBottom component="div">
+              Response Data Sumation{" "}
+              <Button>
+                <CSVLink
+                  filename={"Expense_Table.csv"}
+                  data={[...connectorData]}
+                  className="btn btn-primary"
+                  onClick={() => {
+                    message.success("The file is downloading");
+                  }}
+                >
+                  Export to CSV
+                </CSVLink>
+              </Button>
+            </Typography>
+            <TableContainer component={Paper}>
+              <Table aria-label="collapsible table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">Institute Name</TableCell>
+                    <TableCell align="center">Return Code</TableCell>
+                    <TableCell align="center">Extended Description</TableCell>
+                    <TableCell align="center">Count</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {connectorData.map((row: any) => (
+                    <RowConnector key={row.key} row={row} />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        </div>
         <div className="table-container">
           <TableContainer component={Paper}>
             <Table aria-label="collapsible table">
@@ -276,8 +416,8 @@ export default function Home() {
                 <TableRow>
                   <TableCell />
                   <TableCell>Code</TableCell>
-                  <TableCell align="right">Resonse</TableCell>
-                  <TableCell align="right">Count</TableCell>
+                  <TableCell align="center">Resonse</TableCell>
+                  <TableCell align="center">Count</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
