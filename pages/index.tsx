@@ -244,7 +244,7 @@ export default function Home() {
         redirect: "follow",
       };
 
-      fetch(`https://10.210.70.78:0/uplaod`, requestOptions)
+      fetch(`https://fastapi-b7h7.onrender.com/uplaod`, requestOptions)
         .then((response) => response.json())
         .then(async (result: any) => {
           console.log(JSON.parse(result.connector));
@@ -274,7 +274,7 @@ export default function Home() {
       redirect: "follow",
     };
 
-    fetch(`https://10.210.70.78:0/analize`, requestOptions)
+    fetch(`https://fastapi-b7h7.onrender.com/analize`, requestOptions)
       .then((response) => response.blob())
           
       .then(async (blob: any) => {
