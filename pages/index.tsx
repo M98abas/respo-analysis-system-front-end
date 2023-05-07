@@ -276,6 +276,7 @@ export default function Home() {
 
     fetch(`http://10.210.70.78:0/analize`, requestOptions)
       .then((response) => response.blob())
+          
       .then(async (blob: any) => {
         const url = window.URL.createObjectURL(new Blob([blob]));
         const link: any = document.createElement("a");
