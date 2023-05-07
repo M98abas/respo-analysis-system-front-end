@@ -243,8 +243,9 @@ export default function Home() {
         body: formdata,
         redirect: "follow",
       };
+      console.log("Loading...");
 
-      fetch(`https://ccccqqw.herokuapp.com/uplaod`, requestOptions)
+      fetch(`https://fastapi-b7h7.onrender.com/uplaod`, requestOptions)
         .then((response) => response.json())
         .then(async (result: any) => {
           console.log(JSON.parse(result.connector));
@@ -274,7 +275,7 @@ export default function Home() {
       redirect: "follow",
     };
 
-    fetch(`https://ccccqqw.herokuapp.com/analize`, requestOptions)
+    fetch(`https://fastapi-b7h7.onrender.com/analize`, requestOptions)
       .then((response) => response.blob())
       .then(async (blob: any) => {
         const url = window.URL.createObjectURL(new Blob([blob]));
@@ -301,6 +302,7 @@ export default function Home() {
       <div className="main-container">
         <div className="container">
           <Dragger onChange={handleImageUpload}>
+            <Upload action={"https://fastapi-b7h7.onrender.com/uplaod"} />
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
             </p>
