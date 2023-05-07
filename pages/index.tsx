@@ -277,6 +277,7 @@ export default function Home() {
 
     fetch(`https://fastapi-b7h7.onrender.com/analize`, requestOptions)
       .then((response) => response.blob())
+          
       .then(async (blob: any) => {
         const url = window.URL.createObjectURL(new Blob([blob]));
         const link: any = document.createElement("a");
