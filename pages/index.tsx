@@ -24,15 +24,23 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Grid } from "@mui/material";
 import Image from "next/image";
+import Head from "next/head";
 const { Dragger } = Upload;
 
 export default function Home() {
   const lookingFor = ["AuthCode", "ConnectorTxID2", "ExtendedDescription"];
   const [dataSource, setDataSource]: any = useState([]);
   const [total, setTotal]: any = useState(0);
+
   const [sumationData, setSumationData]: any = useState([]);
   const [connectorData, setConnectorData]: any = useState([]);
   const [image, setImage]: any = useState();
+  const formatToCurrency: any = (amount: Number) => {
+    const result: any = amount ? amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,"): null;
+
+    return <span>{result.toString()}</span>;
+  };
+
   // const dateTime = moment(new Date()).format("YYYY/MM/DD");
   let state: any = {
     loading: false, // to keep track of when form submitted
@@ -55,8 +63,9 @@ export default function Home() {
   }
 
   function Row(props: { row: ReturnType<typeof createData> }) {
-    const { row } = props;
+    const { row }: any = props;
     const [open, setOpen] = React.useState(false);
+console.log("Data is ", row);
 
     return (
       <React.Fragment>
@@ -74,6 +83,7 @@ export default function Home() {
             {row.response_code}
           </TableCell>
           <TableCell align="right">{row.response_description}</TableCell>
+          <TableCell align="right">{formatToCurrency(parseFloat(row.total_amount))}</TableCell>
           <TableCell align="right">{row.count}</TableCell>
         </TableRow>
         <TableRow>
@@ -110,9 +120,9 @@ export default function Home() {
                   </TableHead>
                   <TableBody>
                     {row.children.map((historyRow: any) => {
-                      // console.log(historyRow.ConnectorDetails);
-
-                      let connectorResult = historyRow.ConnectorDetails;
+                      
+                      let connectorResult:any = historyRow.ConnectorDetails;
+                      console.log("ConnectorResult => ",connectorResult);
 
                       return (
                         <>
@@ -155,7 +165,7 @@ export default function Home() {
                               {historyRow.AccountHolder}
                             </TableCell>
                             <TableCell align="center">
-                              {historyRow.Credit} {historyRow.Currency}
+                              {historyRow.Credit ? historyRow.Credit.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'): null}
                             </TableCell>
                             <TableCell align="center">
                               {moment(
@@ -163,28 +173,7 @@ export default function Home() {
                               ).format("YYYY/MM/DD")}
                             </TableCell>
                             <TableCell align="left">
-                              {Object.keys(connectorResult).length !== 0 ? (
-                                <Grid
-                                  container
-                                  direction="column"
-                                  justifyContent="center"
-                                  alignItems="flex-start"
-                                  textAlign="left"
-                                >
-                                  {Object.keys(connectorResult).map(
-                                    (key: any) =>
-                                      lookingFor.indexOf(key) >= 0 ? (
-                                        <p>
-                                          {key} &gt;&gt; {connectorResult[key]}
-                                        </p>
-                                      ) : (
-                                        <></>
-                                      )
-                                  )}
-                                </Grid>
-                              ) : (
-                                <p>No Data Availabe</p>
-                              )}
+                              {historyRow.ConnectorDetails}
                             </TableCell>
                           </TableRow>
                         </>
@@ -205,12 +194,17 @@ export default function Home() {
     return (
       <React.Fragment>
         <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-          <TableCell align="left">
             {Number.isInteger(row.clearingInstituteName)
-              ? "Total"
-              : row.clearingInstituteName}
-          </TableCell>
-          <TableCell align="center">{row.sumation}</TableCell>
+          ? <TableCell bgcolor="primary.main" style={{boxShadow:'0px 12px 10px 0px rgba(0,0,0,0.5)', marginTop:10}} align="left">Total</TableCell>
+              : 
+              <TableCell align="left">
+                {row.clearingInstituteName}
+              </TableCell>
+              }
+          {Number.isInteger(row.clearingInstituteName)
+              ? <TableCell bgcolor="primary.main" align="center">{row.sumation}</TableCell>
+              : <TableCell align="center">{row.sumation}</TableCell>}
+          
         </TableRow>
       </React.Fragment>
     );
@@ -245,9 +239,10 @@ export default function Home() {
       };
       console.log("Loading...");
 
-      fetch(`https://fastapi-b7h7.onrender.com/uplaod`, requestOptions)
+      fetch(`http://127.0.0.1:8000/uplaod`, requestOptions)
         .then((response) => response.json())
         .then(async (result: any) => {
+          console.log(result);
           console.log(JSON.parse(result.connector));
 
           setSumationData(JSON.parse(result.sumation));
@@ -275,9 +270,9 @@ export default function Home() {
       redirect: "follow",
     };
 
-    fetch(`https://fastapi-b7h7.onrender.com/analize`, requestOptions)
+    fetch(`http://127.0.0.1:8000/analize`, requestOptions)
       .then((response) => response.blob())
-          
+
       .then(async (blob: any) => {
         const url = window.URL.createObjectURL(new Blob([blob]));
         const link: any = document.createElement("a");
@@ -300,10 +295,13 @@ export default function Home() {
 
   return (
     <>
+    <Head>
+      <link rel="shortcut icon" href="/favicon.ico" />
+    </Head>
       <div className="main-container">
         <div className="container">
           <Dragger onChange={handleImageUpload}>
-            <Upload action={"https://fastapi-b7h7.onrender.com/uplaod"} />
+            <Upload action={"http://127.0.0.1:8000/uplaod"} />
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
             </p>
@@ -347,7 +345,7 @@ export default function Home() {
               Sumation Of all Transaction{" "}
               <Button>
                 <CSVLink
-                  filename={"Expense_Table.csv"}
+                  filename={"MadaReport.csv"}
                   data={[...sumationData]}
                   className="btn btn-primary"
                   onClick={() => {
@@ -367,7 +365,6 @@ export default function Home() {
                   </TableRow>
                 </TableHead>
 
-                
                 <TableBody>
                   {sumationData.map((row: any) => (
                     <RowTwo key={row.key} row={row} />
@@ -383,7 +380,7 @@ export default function Home() {
               Response Data Sumation{" "}
               <Button>
                 <CSVLink
-                  filename={"Expense_Table.csv"}
+                  filename={"ConnectorDetailReport.csv"}
                   data={[...connectorData]}
                   className="btn btn-primary"
                   onClick={() => {
@@ -414,6 +411,18 @@ export default function Home() {
           </div>
         </div>
         <div className="table-container">
+          <button>
+            <CSVLink
+              filename={"HyperPayReport.csv"}
+              data={[...rows]}
+              className="btn btn-primary"
+              onClick={() => {
+                message.success("The file is downloading");
+              }}
+            >
+              Export to CSV
+            </CSVLink>
+          </button>
           <TableContainer component={Paper}>
             <Table aria-label="collapsible table">
               <TableHead>
@@ -421,6 +430,7 @@ export default function Home() {
                   <TableCell />
                   <TableCell>Code</TableCell>
                   <TableCell align="center">Resonse</TableCell>
+                  <TableCell align="center">Amount</TableCell>
                   <TableCell align="center">Count</TableCell>
                 </TableRow>
               </TableHead>

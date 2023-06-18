@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+/backend-fastapi/env
+/backend-fastapi/__pycache__
+/backend-fastapi/Procfile
 # testing
 /coverage
 
@@ -34,3 +37,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# local env files
+env*.local
+./backend-fastapi/env
+./backend-fastapi/__pycache__
+
+data.csv

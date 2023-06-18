@@ -1,0 +1,102 @@
+{
+  "authentication": {
+    "3ds": {
+      "acsEci": "02",
+      "authenticationToken": "kBPMhBA3c/KlBTshDmYu64QB1a8d",
+      "transactionId": "bb3da14e-07d7-4a56-8dc7-23e14cd7c430"
+    },
+    "3ds2": {
+      "dsTransactionId": "bb3da14e-07d7-4a56-8dc7-23e14cd7c430",
+      "protocolVersion": "2.2.0",
+      "transactionStatus": "Y"
+    },
+    "transactionId": "8acda4a787e639860187faa74654415c_AUTH",
+    "version": "3DS2"
+  },
+  "authorizationResponse": {
+    "cardSecurityCodeError": "M",
+    "commercialCardIndicator": "1",
+    "date": "0508",
+    "financialNetworkCode": "MDS",
+    "financialNetworkDate": "2023-05-08",
+    "posData": "1025100006600",
+    "posEntryMode": "812",
+    "processingCode": "000000",
+    "responseCode": "00",
+    "stan": "84316",
+    "time": "091826",
+    "transactionIdentifier": "M0M9S9"
+  },
+  "device": {
+    "browser": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Mobile/15E148 Safari/604.1",
+    "ipAddress": "185.133.226.37"
+  },
+  "gatewayEntryPoint": "WEB_SERVICES_API",
+  "merchant": "9000069000",
+  "order": {
+    "amount": 204.06,
+    "authenticationStatus": "AUTHENTICATION_SUCCESSFUL",
+    "chargeback": { "amount": 0, "currency": "USD" },
+    "creationTime": "2023-05-08T09:18:00.306Z",
+    "currency": "USD",
+    "description": "1284.6179.0914 BARAKAT AL KAWTHAR-9000069000",
+    "id": "1284.6179.0914",
+    "lastUpdatedTime": "2023-05-08T09:18:26.665Z",
+    "merchantAmount": 204.06,
+    "merchantCategoryCode": "4722",
+    "merchantCurrency": "USD",
+    "reference": "1284.6179.0914",
+    "status": "CAPTURED",
+    "totalAuthorizedAmount": 204.06,
+    "totalCapturedAmount": 204.06,
+    "totalRefundedAmount": 0.0
+  },
+  "partnerSolutionId": "ACI Worldwide",
+  "response": {
+    "acquirerCode": "00",
+    "acquirerMessage": "Approved",
+    "cardSecurityCode": { "acquirerCode": "M", "gatewayCode": "MATCH" },
+    "gatewayCode": "APPROVED"
+  },
+  "result": "SUCCESS",
+  "sourceOfFunds": {
+    "provided": {
+      "card": {
+        "brand": "MASTERCARD",
+        "expiry": { "month": "12", "year": "23" },
+        "fundingMethod": "DEBIT",
+        "issuer": "PSA PAYMENT SERVICES AUSTRIA GMBH",
+        "nameOnCard": "Aqeel Aljanabi",
+        "number": "535686xxxxxx1955",
+        "scheme": "MASTERCARD",
+        "storedOnFile": "NOT_STORED"
+      }
+    },
+    "type": "CARD"
+  },
+  "timeOfLastUpdate": "2023-05-08T09:18:26.665Z",
+  "timeOfRecord": "2023-05-08T09:18:25.909Z",
+  "transaction": {
+    "acquirer": {
+      "batch": 20230508,
+      "date": "0508",
+      "id": "IEGFS_S2I",
+      "merchantId": "9000069000",
+      "settlementDate": "2023-05-08",
+      "timeZone": "+0300",
+      "transactionId": "M0M9S9"
+    },
+    "amount": 204.06,
+    "authenticationStatus": "AUTHENTICATION_SUCCESSFUL",
+    "authorizationCode": "202629",
+    "currency": "USD",
+    "id": "8acda4a787e639860187faa74654415c",
+    "receipt": "312809084316",
+    "reference": "8acda4a787e639860187faa74654415c",
+    "source": "INTERNET",
+    "stan": "84316",
+    "terminal": "11111",
+    "type": "PAYMENT"
+  },
+  "version": "61"
+}
