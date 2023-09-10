@@ -1,4 +1,4 @@
-# Mahmoud_He_Was_Here_Recently.
+# This simple sys to analysis system.
 
 
 Data should be follow these condation return correct result:
@@ -20,5 +20,19 @@ Do below :
 
 
 
-`ShortId	UniqueId	PaymentType	PaymentMethod	RequestTimestamp	ChannelName	AccountNumberLast4	ReturnCode	AccountHolder	Brand	Debit	Credit	Currency	Bin	ConnectorDetails
+`ShortId	
+UniqueId	
+PaymentType	
+PaymentMethod	
+RequestTimestamp	
+ChannelName	
+AccountNumberLast4	
+ReturnCode	
+AccountHolder	
+Brand	
+Debit	
+Credit	
+Currency	
+Bin	
+ConnectorDetails
 `
